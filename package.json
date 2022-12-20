@@ -1,6 +1,6 @@
 {
-	"name": "nextjs-storyblok-tailwind-starter",
-	"version": "1.0.2",
+	"name": "nextjs-storyblok-tailwind-gql-starter",
+	"version": "1.0.0",
 	"description": "A Next.js-bootstrapped project starter kit for Storyblok headless CMS with Tailwind CSS configured. Created by 9thCO Agency.",
 	"keywords": [
 		"Next.js",
@@ -42,6 +42,7 @@
 		]
 	},
 	"dependencies": {
+		"@apollo/client": "^3.7.2",
 		"@next/font": "^13.0.6",
 		"@storyblok/react": "^1.3.4",
 		"@types/node": "18.11.12",
@@ -50,6 +51,7 @@
 		"axios": "^0.27.2",
 		"eslint": "8.29.0",
 		"eslint-config-next": "13.0.6",
+		"graphql": "^16.6.0",
 		"next": "13.0.6",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",

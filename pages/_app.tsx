@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app';
 import { storyblokInit, apiPlugin } from '@storyblok/react';
 import { Feature, Grid, Teaser, Page } from '../components';
 import { Inter } from '@next/font/google';
+import { ApolloProvider } from '@apollo/client';
+import { draftClient } from './../utils/apollo-client';
 
 export const inter = Inter({
 	subsets: ['latin'],
@@ -26,8 +28,10 @@ storyblokInit({
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
-		<main className={`${inter.variable} u-font-sans`}>
-			<Component {...pageProps} />
-		</main>
+		<ApolloProvider client={draftClient}>
+			<main className={`${inter.variable} u-font-sans`}>
+				<Component {...pageProps} />
+			</main>
+		</ApolloProvider>
 	);
 }

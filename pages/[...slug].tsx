@@ -5,6 +5,8 @@ import { useStoryblokState, getStoryblokApi, StoryblokComponent } from '@storybl
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { StoryProp } from '../types';
+import { gql } from '@apollo/client';
+import { draftClient, publishedClient } from '../utils/apollo-client';
 
 export default function Page({ story, preview }: StoryProp) {
 	story = useStoryblokState(story, {}, preview); // enables live visual editing and preview mode
@@ -40,22 +42,34 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 	// 	slug = 'home';
 	// }
 
-	// load the draft version
-	let sbParams = {
-		version: 'published', // default shows published
+	const queryParams = {
+		query: gql`
+			query PageData($id: ID!) {
+				PageItem(id: $id) {
+					id
+					slug
+					name
+					content {
+						_uid
+						component
+						body
+					}
+				}
+			}
+		`,
+		variables: {
+			id: slug,
+		},
 	};
 
-	if (context.preview) {
-		sbParams.version = 'draft';
-	}
-
-	const storyblokApi = getStoryblokApi();
-	let { data } = await storyblokApi.get(`cdn/stories/${slug}`, sbParams);
+	const { data, loading, error } = context.preview
+		? await draftClient.query(queryParams)
+		: await publishedClient.query(queryParams);
 
 	return {
 		props: {
-			story: data ? data.story : false,
-			key: data ? data.story.id : false,
+			story: data ? data?.PageItem : false,
+			key: data ? data?.PageItem.id : false,
 			preview: context.preview || false,
 		},
 		revalidate: 3600, // revalidate every hour
